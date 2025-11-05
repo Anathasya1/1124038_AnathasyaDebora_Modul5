@@ -17,8 +17,8 @@ public class UserRepository {
     public ArrayList<User> listAllSearchByName(String name) {
         ArrayList<User> userList = new ArrayList<>();
         Connection conn = Database.connect();
-       String sql = "SELECT u.*, mahasiswa.*, dosen_tetap.*, dosen_honorer.*, karyawan.* FROM \"user\" u LEFT JOIN mahasiswa ON u.id = mahasiswa.nim LEFT JOIN karyawan ON u.id = karyawan.nik LEFT JOIN dosen_honorer ON u.id = dosen_honorer.nik LEFT JOIN dosen_tetap ON u.id = dosen_tetap.nik WHERE u.nama =? ";
-       try {
+        String sql = "SELECT u.*, mahasiswa.*, dosen_tetap.*, dosen_honorer.*, karyawan.* FROM \"user\" u LEFT JOIN mahasiswa ON u.id = mahasiswa.nim LEFT JOIN karyawan ON u.id = karyawan.nik LEFT JOIN dosen_honorer ON u.id = dosen_honorer.nik LEFT JOIN dosen_tetap ON u.id = dosen_tetap.nik WHERE u.nama =? ";
+        try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, name);
             ResultSet resultQuery = preparedStatement.executeQuery();
@@ -39,16 +39,19 @@ public class UserRepository {
                     case "Mahasiswa Sarjana":
                     case "Mahasiswa Doktor":
                     case "Mahasiswa Magister":
-                        userList.add(new Mahasiswa(idUser, kode_jurusan, nama, tempat_lahir,tanggal_lahir, alamat, telepon));
+                        userList.add(new Mahasiswa(idUser, kode_jurusan, nama, tempat_lahir, tanggal_lahir, alamat,
+                                telepon));
                         break;
                     case "Karyawan":
-                        userList.add(new Karyawan(idUser, nama, tempat_lahir, tanggal_lahir, alamat, telepon, salary));
-                        break;    
+                        userList.add(new Karyawan(idUser, nama, tempat_lahir, tanggal_lahir, alamat, telepon, resultQuery.getInt("salary_karyawan")));
+                        break;
                     case "Dosen Tetap":
-                        userList.add(new DosenTetap(idUser, nama, tempat_lahir, tanggal_lahir, alamat, telepon, departemen, salary));
+                        userList.add(new DosenTetap(idUser, nama, tempat_lahir, tanggal_lahir, alamat, telepon,
+                                departemen, salary));
                         break;
                     case "Dosen Honorer":
-                        userList.add(new DosenHonorer(idUser, nama, tempat_lahir, tanggal_lahir, alamat, telepon, departemen, honor_per_sks));
+                        userList.add(new DosenHonorer(idUser, nama, tempat_lahir, tanggal_lahir, alamat, telepon,
+                                resultQuery.getString("departemen_dh"), honor_per_sks));
                         break;
                     default:
                         break;

@@ -57,12 +57,12 @@ public class StaffRepository {
                     resultAbsenKaryawan.next();
                     double unitKaryawan = resultAbsenKaryawan.getInt("total_presensi_karyawan");
 
-                    String salaryKaryawan = "SELECT COUNT(absen.status_presensi) AS presensi_karyawan, u.id, k.salary FROM \"user\" u INNER JOIN karyawan k ON u.id = k.nik INNER JOIN presensi_staff absen ON u.id = absen.id_presensi WHERE u.id=? GROUP BY u.id, k.salary";
+                    String salaryKaryawan = "SELECT COUNT(absen.status_presensi) AS presensi_karyawan, u.id, k.salary_karyawan FROM \"user\" u INNER JOIN karyawan k ON u.id = k.nik INNER JOIN presensi_staff absen ON u.id = absen.id_presensi WHERE u.id=? GROUP BY u.id, k.salary_karyawan";
                     PreparedStatement getKaryawan = conn.prepareStatement(salaryKaryawan);
                     getKaryawan.setString(1, nik);
                     ResultSet gajiKaryawan = getKaryawan.executeQuery();
                     gajiKaryawan.next();
-                    gaji = unitKaryawan / 22 * gajiKaryawan.getInt("salary");
+                    gaji = unitKaryawan / 22 * gajiKaryawan.getInt("salary_karyawan");
                 }
             } else {
                 gaji = 0;
